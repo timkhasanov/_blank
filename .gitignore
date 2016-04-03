@@ -15,5 +15,6 @@ originals
 
 dev/plugins
 node_modules
+prod
 
 .gitkeep
