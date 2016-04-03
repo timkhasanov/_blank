@@ -3,7 +3,7 @@
 /* --------- api --------- */
 // gulp - watching
 // gulp sprite - sprite generation
-// gulp clean - clean prod/js
+// gulp clean - clean prod
 
 /* --------- components --------- */
 var gulp         = require('gulp'),
