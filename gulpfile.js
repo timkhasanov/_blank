@@ -8,7 +8,7 @@
 /* --------- components --------- */
 var gulp         = require('gulp'),
     concat       = require('gulp-concat'),
-    browserSync  = require('browser-sync'),
+    browserSync  = require('browser-sync').create(),
     uglify       = require('gulp-uglify'),
     sass         = require('gulp-sass'),
     sourcemaps   = require('gulp-sourcemaps'),
@@ -36,10 +36,21 @@ var paths = {
 
   jade: {
     src: 'dev/jade/**/*.jade',
-    location: 'dev/jade/*.jade',
+    location: 'dev/jade/pages/*.jade',
     destination: 'prod'
   }
 };
+
+/* -------- gulp server  -------- */
+gulp.task('server', function () {
+  browserSync.init({
+    browser: ['google chrome'],
+    server: {
+      baseDir: ["dev", "prod"]
+    },
+    notify: false
+  });
+});
 
 /* ----- jade ----- */
 gulp.task('jade-compile', function () {
@@ -47,6 +58,7 @@ gulp.task('jade-compile', function () {
     .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
     .pipe(jade())
     .pipe(gulp.dest(paths.jade.destination))
+    .pipe(browserSync.stream());
 });
 
 /* ------ sass ------ */
@@ -60,7 +72,8 @@ gulp.task('sass-compile', function () {
         }))
     .pipe(concat("main.min.css"))
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest(paths.sass.destination));
+    .pipe(gulp.dest(paths.sass.destination))
+    .pipe(browserSync.stream());
 });
 
 /* -------- concat js custom -------- */
@@ -71,7 +84,8 @@ gulp.task('concat-js', function () {
     .pipe(concat('main.min.js'))
     .pipe(uglify())
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest(paths.js.destination));
+    .pipe(gulp.dest(paths.js.destination))
+    .pipe(browserSync.stream());
 });
 
 /* -------- concat js plugins -------- */
@@ -82,7 +96,8 @@ gulp.task('concat-js-plugins', function() {
     .pipe(plumber())
     .pipe(concat('plugins.min.js'))
     .pipe(uglify())
-    .pipe(gulp.dest(paths.js.destination));
+    .pipe(gulp.dest(paths.js.destination))
+    .pipe(browserSync.stream());
 });
 
 /* -------- images -------- */
@@ -125,17 +140,6 @@ gulp.task('sprite', function () {
     }));
   spriteData.img.pipe(gulp.dest('prod/images/'));
   spriteData.css.pipe(gulp.dest('dev/sass/_common'));
-});
-
-/* -------- gulp server  -------- */
-gulp.task('server', function () {
-  browserSync({
-    browser: ['google chrome'],
-    server: {
-      baseDir: ["dev", "prod"]
-    },
-    notify: false
-  });
 });
 
 /* -------- gulp watching  -------- */
