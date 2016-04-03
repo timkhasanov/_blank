@@ -44,7 +44,6 @@ var paths = {
 /* -------- gulp server  -------- */
 gulp.task('server', function () {
   browserSync.init({
-    browser: ['google chrome'],
     server: {
       baseDir: ["dev", "prod"]
     },
