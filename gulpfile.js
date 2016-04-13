@@ -47,6 +47,7 @@ gulp.task('server', function () {
     server: {
       baseDir: ["dev", "prod"]
     },
+    // proxy: "localhost:8888",
     notify: false
   });
 });
@@ -99,26 +100,42 @@ gulp.task('concat-js-plugins', function() {
     .pipe(browserSync.stream());
 });
 
+/* -------- concat js plugins (head) -------- */
+gulp.task('concat-js-plugins-head', function() {
+  return gulp.src('./dev/plugins/modernizr-custom.js')
+    .pipe(plumber())
+    .pipe(concat('plugins-head.min.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest(paths.js.destination))
+    .pipe(browserSync.stream());
+});
+
 /* -------- images -------- */
 gulp.task('images', function () {
-    return gulp.src('dev/images/*.+(png|jpg|jpeg|gif|svg)')
-        .pipe(imagemin({
-            progressive: true,
-            interlaced: true
-        }))
-        .pipe(gulp.dest('prod/images/'));
+  return gulp.src('dev/images/*.+(png|jpg|jpeg|gif|svg)')
+    .pipe(imagemin({
+        progressive: true,
+        interlaced: true
+    }))
+    .pipe(gulp.dest('prod/images/'));
 });
 
 /* -------- favicon -------- */
 gulp.task('favicon', function () {
-    return gulp.src('dev/images/favicon/*.+(ico|png|json|svg|xml)')
-        .pipe(gulp.dest('prod/images/favicon/'));
+  return gulp.src('dev/images/favicon/*.+(ico|png|json|svg|xml)')
+    .pipe(gulp.dest('prod/images/favicon/'));
 });
 
 /* -------- fonts -------- */
 gulp.task('fonts', function () {
-    return gulp.src('dev/fonts/**/*.+(eot|svg|ttf|woff|woff2)')
-        .pipe(gulp.dest('prod/fonts/'));
+  return gulp.src('dev/fonts/**/*.+(eot|svg|ttf|woff|woff2)')
+    .pipe(gulp.dest('prod/fonts/'));
+});
+
+/* -------- fonts -------- */
+gulp.task('php', function () {
+  return gulp.src('dev/php/**/*.*')
+    .pipe(gulp.dest('prod/php/'));
 });
 
 /* -------- clean prod/js -------- */
@@ -155,6 +172,7 @@ gulp.task('watch', function () {
     'prod/css/*.css',
     'prod/js/*.js'
   ]).on('change', browserSync.reload);
+  gulp.watch('dev/php/**/*.*', ['php']);
 });
 
 gulp.task('default', [
@@ -162,10 +180,12 @@ gulp.task('default', [
   'sass-compile',
   'concat-js',
   'concat-js-plugins',
+  'concat-js-plugins-head',
   'images',
   'favicon',
   'fonts',
   'server',
+  'php',
   'watch'
 ]);
 

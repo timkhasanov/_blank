@@ -1,6 +1,6 @@
 // -----------------------Imports-----------------------
 
-@import "./_common/_vars" // Uncomment after write variables
+@import "./_common/_vars"
 @import "./_common/_mixins"
 @import "./_common/_fonts"
 //@import "./_common/_sprite" // Uncomment after the sprite generation
@@ -14,6 +14,7 @@
 
 html, body
   height: 100%
+  box-sizing: border-box
 
 body
   background: $body-color
@@ -41,6 +42,8 @@ p
 a
   text-decoration: none
   color: $links-color
+  &:focus
+    outline: none
   &:hover
     color: $accent-color
 
