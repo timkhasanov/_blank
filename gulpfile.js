@@ -18,6 +18,7 @@ var gulp         = require('gulp'),
     clean        = require('gulp-rimraf'),
     imagemin     = require('gulp-imagemin'),
     plumber      = require('gulp-plumber'),
+    jshint       = require('gulp-jshint'),
     notify       = require('gulp-notify');
 
 /* --------- paths --------- */
@@ -144,6 +145,13 @@ gulp.task('clean', function() {
     .pipe(clean());
 });
 
+/* -------- js linter -------- */
+gulp.task('lint', function() {
+  return gulp.src('./dev/js/*.js')
+    .pipe(jshint())
+    .pipe(jshint.reporter('jshint-stylish'));
+});
+
 /* -------- auto sprites  -------- */
 gulp.task('sprite', function () {
   var spriteData = gulp.src('dev/images/sprites/*.png')
@@ -173,6 +181,7 @@ gulp.task('watch', function () {
     'prod/js/*.js'
   ]).on('change', browserSync.reload);
   gulp.watch('dev/php/**/*.*', ['php']);
+  gulp.watch('dev/js/**/*.js', ['lint']);
 });
 
 gulp.task('default', [
@@ -186,7 +195,8 @@ gulp.task('default', [
   'fonts',
   'server',
   'php',
-  'watch'
+  'watch',
+  'lint'
 ]);
 
 // ===================== Functions ======================
